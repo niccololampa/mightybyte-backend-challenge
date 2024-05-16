@@ -10,8 +10,8 @@ const app = (0, express_1.default)();
 const PORT = process.env.PORT;
 app
     .listen(PORT, () => {
-    console.log("Server running at PORT: ", PORT);
+    console.log('Server running at PORT: ', PORT);
 })
-    .on("error", (error) => {
+    .on('error', (error) => {
     throw new Error(error.message);
 });
