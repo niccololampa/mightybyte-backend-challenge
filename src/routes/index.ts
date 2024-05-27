@@ -7,7 +7,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 const router = express.Router();
 
-router.post('/url', (req: Request, res: Response) => {
+router.post('/url', async (req: Request, res: Response) => {
   const { url, clientId } = req.body;
   const socket = req.io;
   const shortUrlCode = crypto.randomBytes(5).toString('hex');
@@ -15,8 +15,41 @@ router.post('/url', (req: Request, res: Response) => {
 
   urlMappings[shortUrlCode] = url;
 
-  socket.to(clientId).emit('urlShortened', shortUrl);
-  res.sendStatus(200);
+  const emitUrl = (url: string, attempts: number = 10, timeDelay: number = 1000): Promise<void> => {
+    return new Promise((resolve, reject) => {
+      let attemptsLeft = attempts;
+
+      const emitEvent = () => {
+        if (attemptsLeft <= 0) {
+          reject(new Error(`Failed to deliver url to client after ${attempts} attempts`));
+          return;
+        }
+
+        socket.to(clientId).emit('urlShortened', url, (response: { status: string }) => {
+          console.log(response);
+          if (response && response.status === 'received') {
+            resolve();
+          } else {
+            attemptsLeft -= 1;
+            setTimeout(emitEvent, timeDelay);
+          }
+        });
+      };
+
+      emitEvent();
+    });
+  };
+
+  try {
+    await emitUrl(shortUrl);
+    res.sendStatus(200);
+  } catch (error) {
+    console.error(error);
+    res.sendStatus(500);
+  }
+
+  // socket.to(clientId).emit('urlShortened', shortUrl);
+  // res.sendStatus(200);
 });
 
 router.get('/:id', (req: Request, res: Response) => {
