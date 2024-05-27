@@ -12,8 +12,7 @@ router.post('/url', (req: Request, res: Response) => {
   const { url, clientId } = req.body;
   const socket = req.io;
   const shortUrlCode = crypto.randomBytes(5).toString('hex');
-  //TODO:  insert url to env url
-  const shortUrl = `http://localhost:${process.env.PORT}/${shortUrlCode}`;
+  const shortUrl = `${process.env.BASE_URL}:${process.env.PORT}/${shortUrlCode}`;
 
   urlMappings[shortUrlCode] = url;
 
