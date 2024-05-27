@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Socket.IO Example</title>
+    <!-- Include Socket.IO client library -->
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+  </head>
+  <body>
+    <h1>URL Shortener</h1>
+    <p id="socket-id">Socket ID: Not connected</p>
+
+    <form id="urlForm">
+      <label for="url">Enter URL:</label>
+      <input type="text" id="url" name="url" required />
+      <button type="submit">Shorten URL</button>
+    </form>
+
+    <p id="message">Waiting for URL...</p>
+
+    <script>
+      // Initialize a connection to the server
+      const socket = io('http://localhost:3000');
+
+      // Handle socket connection event
+      socket.on('connect', () => {
+        console.log('Connected to server');
+        console.log('Socket ID:', socket.id); // Log the socket ID
+        document.getElementById('socket-id').innerText = `Socket ID: ${socket.id}`;
+      });
+
+      // Handle incoming url message
+      socket.on('urlShortened', (shortenedURL) => {
+        console.log('Shortened URL received:', shortenedURL);
+        document.getElementById('message').innerHTML = `<a href="${shortenedURL}" target="_blank">${shortenedURL}</a>`;
+      });
+
+      // Handle disconnection
+      socket.on('disconnect', () => {
+        console.log('Disconnected from server');
+      });
+
+      document.getElementById('urlForm').addEventListener('submit', function (event) {
+        event.preventDefault(); // Prevent default form submission behavior
+        const url = document.getElementById('url').value;
+
+        // Send POST request to server with the URL
+        fetch('/url', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ clientId: socket.id, url: url })
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error('Failed to shorten URL');
+            }
+          })
+          .catch((error) => {
+            console.error('Error:', error);
+            document.getElementById('message').innerText = 'Failed to shorten URL. Please try again later.';
+          });
+      });
+    </script>
+  </body>
+</html>
