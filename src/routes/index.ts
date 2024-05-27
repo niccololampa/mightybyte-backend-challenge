@@ -16,9 +16,13 @@ router.post('/url', (req: Request, res: Response) => {
 
   urlMappings[shortUrlCode] = url;
 
-  socket.to(clientId).emit('urlShortened', shortUrl);
-
-  res.send({ shortUrl, clientId });
+  if (clientId) {
+    socket.to(clientId).emit('urlShortened', shortUrl);
+    res.sendStatus(200);
+  } else {
+    socket.emit('urlShortened', shortUrl);
+    res.redirect('/');
+  }
 });
 
 router.get('/:id', (req: Request, res: Response) => {
