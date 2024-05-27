@@ -9,6 +9,7 @@
   </head>
   <body>
     <h1>Socket.IO Client</h1>
+    <p id="socket-id">Socket ID: Not connected</p>
     <p id="message">Waiting for message...</p>
 
     <script>
@@ -18,12 +19,14 @@
       // Handle connection event
       socket.on('connect', () => {
         console.log('Connected to server');
+        console.log('Socket ID:', socket.id); // Log the socket ID
+        document.getElementById('socket-id').innerText = `Socket ID: ${socket.id}`;
       });
 
       // Handle incoming messages
-      socket.on('message', (data) => {
+      socket.on('urlShortened', (data) => {
         console.log('Message received:', data);
-        document.getElementById('message').innerText = data;
+        document.getElementById('message').innerHTML = `<a href="${data}" target="_blank">${data}</a>`;
       });
 
       // Handle disconnection event

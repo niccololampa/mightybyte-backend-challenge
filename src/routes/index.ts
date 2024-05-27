@@ -16,7 +16,7 @@ router.post('/url', (req: Request, res: Response) => {
 
   urlMappings[shortUrlCode] = url;
 
-  socket.to(clientId).emit('urlShortened', { shortUrl });
+  socket.to(clientId).emit('urlShortened', shortUrl);
 
   res.send({ shortUrl, clientId });
 });
