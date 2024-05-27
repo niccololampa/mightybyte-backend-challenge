@@ -1,10 +1,14 @@
 # mightybyte-backend-challenge
 
 
-This app utilizes socket.io (websocket) to send a shortened url for a Client: POST request http://localhost:3000/url params: {"url": "classcalc.com", clientID: {socket id} 
+This app utilizes socket.io (websocket) to send a shortened url for a Client: POST request http://localhost:3000/url params: {"url": "classcalc.com", clientID: {socket id}
+
+## Starting Express sever
+
+Execute `yarn run dev` to start the server
 
 
-## Testing.
+## Testing
 
 Via browser client. Go to "http://localhost:3000/" and enter url you want the server to shorten. 
 
