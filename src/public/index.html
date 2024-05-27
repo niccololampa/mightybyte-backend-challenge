@@ -23,20 +23,20 @@
       // Initialize a connection to the server
       const socket = io('http://localhost:3000');
 
-      // Handle connection event
+      // Handle socket connection event
       socket.on('connect', () => {
         console.log('Connected to server');
         console.log('Socket ID:', socket.id); // Log the socket ID
         document.getElementById('socket-id').innerText = `Socket ID: ${socket.id}`;
       });
 
-      // Handle incoming messages
+      // Handle incoming url message
       socket.on('urlShortened', (shortenedURL) => {
         console.log('Shortened URL received:', shortenedURL);
         document.getElementById('message').innerHTML = `<a href="${shortenedURL}" target="_blank">${shortenedURL}</a>`;
       });
 
-      // Handle disconnection event
+      // Handle disconnection
       socket.on('disconnect', () => {
         console.log('Disconnected from server');
       });

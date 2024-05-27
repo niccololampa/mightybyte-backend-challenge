@@ -7,7 +7,6 @@ import dotenv from 'dotenv';
 dotenv.config();
 const router = express.Router();
 
-// TODO: move to controller
 router.post('/url', (req: Request, res: Response) => {
   const { url, clientId } = req.body;
   const socket = req.io;
