@@ -30,11 +30,12 @@
         document.getElementById('socket-id').innerText = `Socket ID: ${socket.id}`;
       });
 
-      // Handle incoming url message
+      // Handle incoming url message with acknowledgment to server
       socket.on('urlShortened', (shortenedURL, ack) => {
-        console.log(ack);
         console.log('Shortened URL received:', shortenedURL);
         ack({ status: 'received' });
+
+        console.log('Sent acknowledgment back to server');
         document.getElementById('message').innerHTML = `<a href="${shortenedURL}" target="_blank">${shortenedURL}</a>`;
       });
 

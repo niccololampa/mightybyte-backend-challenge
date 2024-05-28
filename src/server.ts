@@ -19,7 +19,7 @@ app.use(express.static('src/public'));
 
 const PORT = process.env.PORT;
 // middleware to attach socket.io to the request to be available for routes controllers.
-app.use((req, res, next) => {
+app.use((req, _res, next) => {
   req.io = io;
   next();
 });

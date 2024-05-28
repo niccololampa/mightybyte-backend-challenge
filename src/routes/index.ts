@@ -3,17 +3,17 @@ import crypto from 'crypto';
 import path from 'path';
 import urlMappings from '../storage/urlMappings';
 import dotenv from 'dotenv';
-
 dotenv.config();
 const router = express.Router();
 
 router.post('/url', async (req: Request, res: Response) => {
   const { url, clientId } = req.body;
-  const socket = req.io;
   const shortUrlCode = crypto.randomBytes(5).toString('hex');
   const shortUrl = `${process.env.BASE_URL}:${process.env.PORT}/${shortUrlCode}`;
 
   urlMappings[shortUrlCode] = url;
+
+  const socket = req.io.sockets.sockets.get(clientId);
 
   const emitUrl = (url: string, attempts: number = 10, timeDelay: number = 1000): Promise<void> => {
     return new Promise((resolve, reject) => {
@@ -24,16 +24,24 @@ router.post('/url', async (req: Request, res: Response) => {
           reject(new Error(`Failed to deliver url to client after ${attempts} attempts`));
           return;
         }
-
-        socket.to(clientId).emit('urlShortened', url, (response: { status: string }) => {
-          console.log(response);
-          if (response && response.status === 'received') {
-            resolve();
-          } else {
-            attemptsLeft -= 1;
-            setTimeout(emitEvent, timeDelay);
-          }
-        });
+        if (socket) {
+          socket.emit('urlShortened', url, (response: { status: string }) => {
+            console.log(response);
+            if (response && response.status === 'received') {
+              console.log('Acknowledgment received from client');
+              resolve();
+            } else {
+              attemptsLeft -= 1;
+              console.log(
+                `Did not receive acknowledgement from clientId: ${clientId} for ${timeDelay}ms. Trying again`
+              );
+              setTimeout(emitEvent, timeDelay);
+            }
+          });
+        } else {
+          console.log(`max attempts of ${attempts} reached`);
+          res.sendStatus(404);
+        }
       };
 
       emitEvent();
@@ -47,9 +55,6 @@ router.post('/url', async (req: Request, res: Response) => {
     console.error(error);
     res.sendStatus(500);
   }
-
-  // socket.to(clientId).emit('urlShortened', shortUrl);
-  // res.sendStatus(200);
 });
 
 router.get('/:id', (req: Request, res: Response) => {
