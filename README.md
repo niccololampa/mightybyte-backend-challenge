@@ -23,3 +23,13 @@ Can also use postman but make sure to provide clientId: socket.id for socket.io 
 
 ![Screenshot 2024-05-28 at 12 04 14 AM](https://github.com/niccololampa/mightybyte-backend-challenge/assets/37615906/8c5952bc-23d2-437e-931e-d120bb1ef1ab)
 ![Screenshot 2024-05-28 at 12 04 22 AM](https://github.com/niccololampa/mightybyte-backend-challenge/assets/37615906/278ee493-5ece-47e2-916f-4c8925ae4d4d)
+
+
+## Client Acknowledgement that short URL is received
+
+The client will send an acknowldgement to the server if url is received via sockets. 
+
+The server will try to send the url as long as it does not receive the acknowldgement. Default is to send every 1000ms for 10 times. 
+
+![Screenshot 2024-05-28 at 8 25 13 PM](https://github.com/niccololampa/mightybyte-backend-challenge/assets/37615906/f8cd88d3-f081-43d2-8fa5-0d1facfbf1c1)
+
