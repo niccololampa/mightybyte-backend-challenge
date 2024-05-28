@@ -39,7 +39,7 @@ router.post('/url', async (req: Request, res: Response) => {
             }
           });
         } else {
-          console.log(`max attempts of ${attempts} reached`);
+          console.log(`clientId:${clientId} not found`);
           res.sendStatus(404);
         }
       };
