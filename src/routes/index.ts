@@ -17,10 +17,10 @@ router.post('/url', async (req: Request, res: Response) => {
 
   const emitUrl = (url: string, attempts: number = 10, timeDelay: number = 1000): Promise<void> => {
     return new Promise((resolve, reject) => {
-      let attemptsLeft = attempts;
+      let attemptsRem = attempts;
 
       const emitEvent = () => {
-        if (attemptsLeft <= 0) {
+        if (attemptsRem <= 0) {
           reject(new Error(`Failed to deliver url to client after ${attempts} attempts`));
           return;
         }
@@ -31,7 +31,7 @@ router.post('/url', async (req: Request, res: Response) => {
               console.log('Acknowledgment received from client');
               resolve();
             } else {
-              attemptsLeft -= 1;
+              attemptsRem -= 1;
               console.log(
                 `Did not receive acknowledgement from clientId: ${clientId} for ${timeDelay}ms. Trying again`
               );
