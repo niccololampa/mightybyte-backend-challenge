@@ -31,5 +31,4 @@ The client will send an acknowldgement to the server if url is received via sock
 
 The server will try to send the url as long as it does not receive the acknowldgement. Default is to send every 1000ms for 10 times. 
 
-![Screenshot 2024-05-28 at 8 25 13 PM](https://github.com/niccololampa/mightybyte-backend-challenge/assets/37615906/f8cd88d3-f081-43d2-8fa5-0d1facfbf1c1)
-
+![Screenshot 2024-05-28 at 8 34 17 PM](https://github.com/niccololampa/mightybyte-backend-challenge/assets/37615906/d1d9b371-eed6-4e24-b2b1-c27499732227)
