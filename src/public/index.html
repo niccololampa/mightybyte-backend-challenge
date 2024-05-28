@@ -30,9 +30,12 @@
         document.getElementById('socket-id').innerText = `Socket ID: ${socket.id}`;
       });
 
-      // Handle incoming url message
-      socket.on('urlShortened', (shortenedURL) => {
+      // Handle incoming url message with acknowledgment to server
+      socket.on('urlShortened', (shortenedURL, ack) => {
         console.log('Shortened URL received:', shortenedURL);
+        ack({ status: 'received' });
+
+        console.log('Sent acknowledgment back to server');
         document.getElementById('message').innerHTML = `<a href="${shortenedURL}" target="_blank">${shortenedURL}</a>`;
       });
 
@@ -42,7 +45,7 @@
       });
 
       document.getElementById('urlForm').addEventListener('submit', function (event) {
-        event.preventDefault(); // Prevent default form submission behavior
+        event.preventDefault();
         const url = document.getElementById('url').value;
 
         // Send POST request to server with the URL
