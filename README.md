@@ -3,7 +3,7 @@
 
 This app utilizes socket.io (websocket) to send a shortened url for a Client: POST request http://localhost:3000/url params: {"url": "classcalc.com", clientId: [socket id]}
 
-## Starting Express sever
+## Starting Express Server
 To install dependencies run:
 
 `yarn install`
